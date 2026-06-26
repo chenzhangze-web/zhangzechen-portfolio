@@ -1,0 +1,39 @@
+---
+import type { PublicationEntry } from '@/types';
+import PublicationCard from '../ui/PublicationCard.astro';
+import PublicationLightbox from '../interactive/PublicationLightbox.tsx';
+
+interface Props {
+  entries: PublicationEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section class="py-24 md:py-32 px-6">
+  <div class="max-w-6xl mx-auto">
+    <!-- Section heading -->
+    <div class="reveal text-center mb-10">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading tracking-tight font-display">
+        <span class="lang-zh">论文</span>
+        <span class="lang-en">Publications</span>
+      </h2>
+      <div class="mx-auto mt-4 h-1 w-16 rounded-full bg-gradient-to-r from-heading via-accent to-[#9b7b50] opacity-70"></div>
+    </div>
+
+{entries.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
+        {entries.map((entry) => (
+          <PublicationCard entry={entry} />
+        ))}
+      </div>
+    ) : (
+      <p class="reveal text-muted text-center text-sm">
+        <span class="lang-zh">暂无论文。</span>
+        <span class="lang-en">No publications listed yet.</span>
+      </p>
+    )}
+
+    <PublicationLightbox publications={entries} client:load />
+  </div>
+</section>

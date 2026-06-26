@@ -1,0 +1,37 @@
+---
+// Activity gallery — images loaded from public/activities/
+const activityFiles = [
+  { src: '/activities/apweb.png', labelZh: 'APWeb-WAIM', labelEn: 'APWeb-WAIM', year: '2024' },
+  { src: '/activities/gccce.png', labelZh: 'GCCCE', labelEn: 'GCCCE', year: '2025' },
+  { src: '/activities/IFET2025.jpg', labelZh: 'IFET 2025', labelEn: 'IFET 2025', year: '2025' },
+  { src: '/activities/全国教育实证研究论坛.jpg', labelZh: '全国教育实证研究论坛', labelEn: 'National Forum on Empirical Education Research', year: '2025' },
+];
+---
+
+<div class="reveal mt-16" style="transition-delay: 500ms">
+  <h3 class="text-2xl font-display font-[700] text-heading text-center mb-6">
+    <span class="lang-zh">学术活动</span>
+    <span class="lang-en">Academic Activities</span>
+  </h3>
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
+    {activityFiles.map(({ src, labelZh, labelEn, year }) => (
+      <div class="group rounded-lg overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,.1)] hover:shadow-[0_8px_24px_rgba(0,0,0,.15)] transition-all duration-300 hover:-translate-y-1">
+        <div class="aspect-[4/3] overflow-hidden relative">
+          <img
+            src={src}
+            alt={labelEn}
+            class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            loading="lazy"
+          />
+          <span class="absolute top-2 right-2 bg-black/60 text-white text-[10px] px-1.5 py-0.5 rounded">{year}</span>
+        </div>
+        <div class="bg-white px-3 py-2">
+          <p class="text-xs text-center text-muted">
+            <span class="lang-zh">{labelZh}</span>
+            <span class="lang-en">{labelEn}</span>
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>

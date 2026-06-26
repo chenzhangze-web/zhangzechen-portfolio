@@ -1,0 +1,71 @@
+---
+interface Props {
+  titleZh: string;
+  titleEn: string;
+  organizationZh: string;
+  organizationEn: string;
+  startDate: string;
+  endDate: string | null;
+  descriptionZh: string;
+  descriptionEn: string;
+  tagsZh: string[];
+  tagsEn: string[];
+  isLast?: boolean;
+}
+
+const { titleZh, titleEn, organizationZh, organizationEn, startDate, endDate, descriptionZh, descriptionEn, tagsZh, tagsEn, isLast = false } =
+  Astro.props;
+
+function formatDateRange(start: string, end: string | null, lang: 'zh' | 'en'): string {
+  const fmt = (d: string) => {
+    const [y, m] = d.split('-');
+    if (lang === 'zh') return `${y}年${parseInt(m ?? '1')}月`;
+    const months = [
+      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+    ];
+    return `${months[parseInt(m ?? '1') - 1]} ${y}`;
+  };
+  return `${fmt(start)} — ${end ? fmt(end) : lang === 'zh' ? '至今' : 'Present'}`;
+}
+---
+
+<div class="reveal relative pl-10 pb-10 group/timeline">
+  <!-- Vertical line -->
+  {!isLast && <div class="absolute left-[7px] top-5 bottom-0 w-px bg-border"></div>}
+  <!-- Dot -->
+  <div class="absolute left-0 top-1.5 w-[15px] h-[15px] rounded-full border-2 border-accent bg-bg group/timeline-[.revealed]:bg-accent transition-colors duration-500"></div>
+  <!-- Content -->
+  <h3 class="text-lg font-semibold text-heading leading-tight">
+    <span class="lang-zh">{titleZh}</span>
+    <span class="lang-en">{titleEn}</span>
+  </h3>
+  <p class="text-accent text-sm font-medium mt-0.5">
+    <span class="lang-zh">{organizationZh}</span>
+    <span class="lang-en">{organizationEn}</span>
+  </p>
+  <p class="text-muted text-xs mt-1">
+    <span class="lang-zh">{formatDateRange(startDate, endDate, 'zh')}</span>
+    <span class="lang-en">{formatDateRange(startDate, endDate, 'en')}</span>
+  </p>
+  <p class="text-muted text-sm mt-3 leading-relaxed max-w-2xl">
+    <span class="lang-zh">{descriptionZh}</span>
+    <span class="lang-en">{descriptionEn}</span>
+  </p>
+  {
+    (tagsZh.length > 0 || tagsEn.length > 0) && (
+      <div class="flex flex-wrap gap-1.5 mt-3">
+        {tagsZh.map((tag) => (
+          <span class="lang-zh px-2.5 py-0.5 text-[11px] font-medium bg-surface text-muted rounded-capsule border border-border">
+            {tag}
+          </span>
+        ))}
+        {tagsEn.map((tag) => (
+          <span class="lang-en px-2.5 py-0.5 text-[11px] font-medium bg-surface text-muted rounded-capsule border border-border">
+            {tag}
+          </span>
+        ))}
+      </div>
+    )
+  }
+</div>

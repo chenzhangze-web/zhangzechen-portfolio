@@ -1,0 +1,125 @@
+---
+import type { SocialLink } from '@/types';
+import SocialIcons from '../ui/SocialIcons.astro';
+import LanyardBadge from '../ui/LanyardBadge.astro';
+
+interface Props {
+  headlineZh: string;
+  headlineEn: string;
+  bioZh: string;
+  bioEn: string;
+  socialLinks: SocialLink[];
+  badgeName: string;
+  badgeNameEn: string;
+  badgeRoleZh: string;
+  badgeRoleEn: string;
+  badgeInstitutionZh: string;
+  badgeInstitutionEn: string;
+  badgeAvatarSrc: string;
+  nameHighlight: string;
+}
+
+const { headlineZh, headlineEn, bioZh, bioEn, socialLinks, badgeName, badgeNameEn, badgeRoleZh, badgeRoleEn, badgeInstitutionZh, badgeInstitutionEn, badgeAvatarSrc } =
+  Astro.props;
+---
+
+<section class="py-16 md:py-24 px-6">
+  <div class="max-w-4xl mx-auto">
+    <!-- Section heading -->
+    <div class="reveal text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading tracking-tight font-display">
+        <span class="lang-zh">关于我</span>
+        <span class="lang-en">About</span>
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,520px)_220px] items-center justify-center gap-8 lg:gap-12 mx-auto">
+      <!-- Left: text content -->
+      <div class="text-center max-w-[520px] mx-auto">
+        <p class="reveal text-[2rem] md:text-[2.3rem] font-display font-[400] text-heading leading-tight" style="transition-delay: 100ms">
+          <span class="lang-zh">你好，我是 </span><span class="lang-en">Hello I'm </span><span style="color: #426bc2;" id="typewriter-name" data-name-zh={badgeName} data-name-en={badgeNameEn}></span><span id="typewriter-cursor" class="inline-block w-[3px] h-[1em] bg-accent align-middle ml-0.5 animate-blink"></span>
+        </p>
+        <p class="reveal text-base text-heading/80 mt-2 font-medium" style="transition-delay: 150ms">
+          <span class="lang-zh">{headlineZh}</span>
+          <span class="lang-en">{headlineEn}</span>
+        </p>
+        <p class="reveal text-muted mt-6 leading-relaxed text-sm" style="transition-delay: 200ms">
+          <span class="lang-zh">{bioZh}</span>
+          <span class="lang-en">{bioEn}</span>
+        </p>
+        <div class="reveal mt-8 flex justify-center" style="transition-delay: 300ms">
+          <SocialIcons links={socialLinks} size="md" />
+        </div>
+      </div>
+
+      <!-- Right: postcard badge -->
+      <div class="reveal flex justify-center shrink-0" style="transition-delay: 400ms">
+        <LanyardBadge
+          name={badgeName}
+          nameEn={badgeNameEn}
+          roleZh={badgeRoleZh}
+          roleEn={badgeRoleEn}
+          institutionZh={badgeInstitutionZh}
+          institutionEn={badgeInstitutionEn}
+          avatarSrc={badgeAvatarSrc}
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Typewriter effect for the Chinese name
+  (function () {
+    const el = document.getElementById('typewriter-name');
+    const cursor = document.getElementById('typewriter-cursor');
+    if (!el || !cursor) return;
+
+    function getNameText() {
+      const lang = document.documentElement.lang;
+      return lang === 'en' ? (el.dataset.nameEn || '') : (el.dataset.nameZh || '');
+    }
+
+    let text = getNameText();
+    let i = 0;
+    let typingTimer;
+
+    function type() {
+      window.clearTimeout(typingTimer);
+      if (i < text.length) {
+        el.textContent += text[i];
+        i++;
+        const delay = 100 + Math.random() * 120;
+        typingTimer = window.setTimeout(type, delay);
+      }
+    }
+
+    function restartType() {
+      window.clearTimeout(typingTimer);
+      text = getNameText();
+      i = 0;
+      el.textContent = '';
+      type();
+    }
+
+    // Start when revealed
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            typingTimer = window.setTimeout(restartType, 300);
+            observer.unobserve(entry.target);
+          }
+        }
+      },
+      { threshold: 0.5 }
+    );
+
+    const parent = el.closest('.reveal');
+    if (parent) observer.observe(parent);
+    else typingTimer = window.setTimeout(restartType, 500);
+
+    const langObserver = new MutationObserver(() => restartType());
+    langObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  })();
+</script>

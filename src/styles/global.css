@@ -1,0 +1,162 @@
+@import url('https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&family=Mulish:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: #F5F0E6;
+  --bg-corner: rgba(187, 176, 154, 0.34);
+  --speck-opacity: 0.38;
+  --speck-size: 280px;
+  --speck-blend: multiply;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body::before,
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::before {
+    opacity: var(--speck-opacity, 0.42);
+    mix-blend-mode: var(--speck-blend, multiply);
+    background-image:
+      radial-gradient(circle at 12px 28px, rgba(72, 58, 42, 0.38) 0 1.15px, transparent 1.35px),
+      radial-gradient(circle at 92px 64px, rgba(126, 92, 58, 0.36) 0 1.35px, transparent 1.6px),
+      radial-gradient(circle at 146px 18px, rgba(45, 42, 36, 0.28) 0 0.9px, transparent 1.12px),
+      radial-gradient(circle at 218px 124px, rgba(101, 78, 52, 0.34) 0 1.25px, transparent 1.48px),
+      radial-gradient(circle at 42px 186px, rgba(72, 66, 57, 0.28) 0 1px, transparent 1.25px),
+      radial-gradient(circle at 196px 226px, rgba(139, 103, 63, 0.30) 0 1.45px, transparent 1.7px);
+    background-size:
+      var(--speck-size, 260px) var(--speck-size, 260px),
+      calc(var(--speck-size, 260px) * 0.92) calc(var(--speck-size, 260px) * 0.92),
+      calc(var(--speck-size, 260px) * 1.08) calc(var(--speck-size, 260px) * 1.08),
+      calc(var(--speck-size, 260px) * 1.16) calc(var(--speck-size, 260px) * 1.16),
+      calc(var(--speck-size, 260px) * 0.84) calc(var(--speck-size, 260px) * 0.84),
+      calc(var(--speck-size, 260px) * 1.28) calc(var(--speck-size, 260px) * 1.28);
+    animation: speckle-drift 9s steps(6, jump-none) infinite;
+  }
+
+  body::after {
+    opacity: 0.26;
+    mix-blend-mode: multiply;
+    background-image:
+      radial-gradient(circle at 34px 44px, rgba(87, 66, 43, 0.58) 0 1.9px, transparent 2.2px),
+      radial-gradient(circle at 178px 92px, rgba(43, 40, 34, 0.48) 0 1.6px, transparent 1.95px),
+      radial-gradient(circle at 104px 206px, rgba(153, 111, 66, 0.44) 0 1.35px, transparent 1.7px);
+    background-size: 330px 330px, 380px 380px, 290px 290px;
+    animation: speckle-twinkle 1.7s steps(3, jump-none) infinite;
+  }
+
+  body {
+    @apply text-black font-sans antialiased;
+    position: relative;
+    overflow-x: hidden;
+    background:
+      radial-gradient(circle at top left, var(--bg-corner, rgba(187, 176, 154, 0.34)) 0, rgba(245, 240, 230, 0) 35vw),
+      radial-gradient(circle at top right, var(--bg-corner, rgba(187, 176, 154, 0.34)) 0, rgba(245, 240, 230, 0) 35vw),
+      radial-gradient(circle at bottom left, var(--bg-corner, rgba(187, 176, 154, 0.34)) 0, rgba(245, 240, 230, 0) 34vw),
+      radial-gradient(circle at bottom right, var(--bg-corner, rgba(187, 176, 154, 0.34)) 0, rgba(245, 240, 230, 0) 34vw),
+      linear-gradient(180deg, #f8f4ea 0%, var(--bg-base, #F5F0E6) 48%, #efe7d8 100%);
+    background-attachment: fixed;
+  }
+
+  main {
+    position: relative;
+    z-index: 1;
+  }
+
+  @keyframes speckle-drift {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    20% { transform: translate3d(-9px, 7px, 0); }
+    40% { transform: translate3d(11px, -5px, 0); }
+    60% { transform: translate3d(-5px, -11px, 0); }
+    80% { transform: translate3d(7px, 10px, 0); }
+  }
+
+  @keyframes speckle-twinkle {
+    0%, 100% { opacity: 0.12; transform: translate3d(0, 0, 0); }
+    33% { opacity: 0.34; transform: translate3d(13px, -9px, 0); }
+    66% { opacity: 0.2; transform: translate3d(-7px, 12px, 0); }
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted;
+  }
+}
+
+@layer components {
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+  }
+  .reveal.revealed {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .glass {
+    background: rgba(255,255,255,0.3);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* i18n language toggle */
+  html[lang="zh-CN"] .lang-en { display: none; }
+  html[lang="en"]    .lang-zh { display: none; }
+}
+
+/* Noise texture helper */
+.noise-overlay {
+  position: relative;
+}
+.noise-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  z-index: 0;
+}
+
+/* Reduced motion: kill all animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

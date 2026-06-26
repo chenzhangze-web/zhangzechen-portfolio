@@ -1,0 +1,52 @@
+---
+import type { HonorEntry } from '@/types';
+
+interface Props {
+  entry: HonorEntry;
+}
+
+const { entry } = Astro.props;
+
+const categoryBadge: Record<string, { labelZh: string; labelEn: string; bg: string; text: string }> = {
+  competition: { labelZh: '竞赛', labelEn: 'Competition', bg: 'bg-accent/10', text: 'text-accent' },
+  scholarship: { labelZh: '奖学金', labelEn: 'Scholarship', bg: 'bg-green-50', text: 'text-green-700' },
+  service: { labelZh: '荣誉', labelEn: 'Service', bg: 'bg-amber-50', text: 'text-amber-700' },
+  patent: { labelZh: '专利', labelEn: 'Patent', bg: 'bg-purple-50', text: 'text-purple-700' },
+};
+
+const badge = categoryBadge[entry.category] || categoryBadge.competition;
+---
+
+<div class="reveal group bg-white rounded-[4px] shadow-[0_10px_30px_rgba(0,0,0,.1)] p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_15px_40px_rgba(0,0,0,.15)]">
+  <div class="flex items-center justify-between mb-2">
+    <span class={`text-[10px] font-medium px-2 py-0.5 rounded-full ${badge.bg} ${badge.text}`}>
+      <span class="lang-zh">{badge.labelZh}</span>
+      <span class="lang-en">{badge.labelEn}</span>
+    </span>
+    <span class="text-[10px] text-muted">{entry.year}</span>
+  </div>
+
+  <h3 class="text-sm font-display font-[700] text-heading leading-snug mb-1">
+    <span class="lang-zh">{entry.awardZh}</span>
+    <span class="lang-en">{entry.awardEn}</span>
+  </h3>
+
+  <p class="text-xs text-muted/80 mb-1">
+    <span class="lang-zh">{entry.titleZh}</span>
+    <span class="lang-en">{entry.titleEn}</span>
+  </p>
+
+  {(entry.projectZh || entry.projectEn) && (
+    <p class="text-xs text-muted italic mb-1">
+      <span class="lang-zh">「{entry.projectZh}」</span>
+      <span class="lang-en">{entry.projectEn}</span>
+    </p>
+  )}
+
+  {entry.ranking && (
+    <span class="text-[10px] font-medium text-heading/60">
+      <span class="lang-zh">排名: {entry.ranking}</span>
+      <span class="lang-en">Rank: {entry.ranking}</span>
+    </span>
+  )}
+</div>

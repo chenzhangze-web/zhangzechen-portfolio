@@ -1,0 +1,71 @@
+---
+// Read prism images from public directory
+const prismImages = import.meta.glob('/public/prism/*.{png,jpg,webp}', { eager: false });
+const imagePaths = Object.keys(prismImages);
+---
+
+<section id="prism" class="py-24 md:py-32 px-6">
+  <div class="max-w-5xl mx-auto">
+    <!-- Heading -->
+    <div class="reveal text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading font-display">
+        <span class="lang-zh">PRISM 项目演示</span>
+        <span class="lang-en">PRISM Project Demo</span>
+      </h2>
+    </div>
+
+    <!-- YouTube embed 16:9 -->
+    <div
+      class="reveal mx-auto mb-10 rounded-xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,.15)]"
+      style="max-width:880px; aspect-ratio:16/9; transition-delay: 100ms"
+    >
+      <iframe
+        src="https://www.youtube.com/embed/qH7A96gM4-k"
+        title="PRISM Demo"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen
+        class="w-full h-full border-0"
+      ></iframe>
+    </div>
+
+    <!-- Bilingual description -->
+    <div class="reveal max-w-2xl mx-auto text-center text-muted leading-relaxed mb-6" style="transition-delay: 200ms">
+      <p class="lang-zh text-sm">
+        PRISM 棱镜是一套人机协同的多模态教育资源质量评价系统，采用三层非补偿机制（24 项）与可解释 AI 评分，支持师生对 AI 评价发起质询、协商修订与元认知反思，在提升资源评价的专业性与可靠性的同时培养使用者的 AI 素养。
+      </p>
+      <p class="lang-en text-sm">
+        PRISM is a human-AI collaborative multimodal system for evaluating educational resource quality. It uses a three-layer non-compensatory mechanism with 24 indicators and explainable AI scoring, enabling teachers and students to question AI evaluations, negotiate revisions, and engage in metacognitive reflection while improving evaluation professionalism and reliability.
+      </p>
+    </div>
+
+    <!-- Project link -->
+    <div class="reveal text-center mb-12" style="transition-delay: 250ms">
+      <a
+        href="https://www.youtube.com/watch?v=qH7A96gM4-k"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border-2 border-accent text-accent hover:bg-accent hover:text-white transition-all text-sm font-medium"
+      >
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" />
+        </svg>
+        <span class="lang-zh">观看演示视频</span>
+        <span class="lang-en">Watch Demo</span>
+      </a>
+    </div>
+
+    <!-- Image gallery -->
+    {imagePaths.length > 0 && (
+      <div class="reveal grid grid-cols-2 lg:grid-cols-3 gap-4" style="transition-delay: 300ms">
+        {imagePaths.map((path) => {
+          const url = path.replace('/public', '');
+          return (
+            <div class="rounded-lg overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,.1)]">
+              <img src={url} alt="PRISM screenshot" class="w-full h-auto object-cover" loading="lazy" />
+            </div>
+          );
+        })}
+      </div>
+    )}
+  </div>
+</section>

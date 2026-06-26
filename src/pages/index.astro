@@ -1,0 +1,167 @@
+---
+import '@/styles/global.css';
+import { getCollection } from 'astro:content';
+import type { ExperienceEntry, PublicationEntry, HonorEntry, SocialLink } from '@/types';
+import { NAV_ITEMS } from '@/types';
+import CapsuleNav from '@/components/nav/CapsuleNav.tsx';
+import LanguageToggle from '@/components/ui/LanguageToggle.tsx';
+import Hero from '@/components/sections/Hero.astro';
+import About from '@/components/sections/About.astro';
+import Experience from '@/components/sections/Experience.astro';
+import Publications from '@/components/sections/Publications.astro';
+import Prism from '@/components/sections/Prism.astro';
+import ActivityGallery from '@/components/ui/ActivityGallery.astro';
+import Honors from '@/components/sections/Honors.astro';
+import Contact from '@/components/sections/Contact.astro';
+
+// --- Content collection queries ---
+const rawExperience = await getCollection('experience');
+const rawPublications = await getCollection('publications');
+const rawHonors = await getCollection('honors');
+
+// --- Transform ---
+const experience: ExperienceEntry[] = rawExperience
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((e) => ({
+    ...e.data,
+    slug: e.slug,
+  }));
+
+const publications: PublicationEntry[] = rawPublications
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((p) => ({
+    ...p.data,
+    slug: p.slug,
+    totalAuthors: p.data.totalAuthors ?? 0,
+  }));
+
+const honors: HonorEntry[] = rawHonors
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((h) => ({
+    ...h.data,
+    slug: h.slug,
+  }));
+
+// --- Site data ---
+const SITE = {
+  name: 'Zhangze Chen',
+  nameZh: '陈张泽',
+  titleZh: '教育技术学直博研究生',
+  titleEn: 'Ph.D. Candidate, Educational Technology',
+  institution: 'Zhejiang Normal University',
+  institutionZh: '浙江师范大学',
+  email: 'zjnuczz@zjnu.edu.cn',
+  scholarUrl: 'https://scholar.google.com/citations?user=oR5Cr9QAAAAJ&hl=zh-CN',
+  headlineZh: '教育技术学直博研究生',
+  headlineEn: 'Ph.D. Candidate, Educational Technology',
+  bioZh: '我始终着迷于智能系统与真实学习交汇之处。真正吸引我的，从来不是模型本身，而是这些系统另一头的人——那个正想把一个问题弄明白的学习者，那个站在讲台上、要决定到底敢不敢信任手边工具的老师。所以我愿意去啃最难的部分：让系统知道自己什么时候错了，能顺着每个人本来的思路去理解，也能把自己的判断讲清楚，清楚到别人能照着用。我喜欢把这样的问题，一点点磨成人们真正信得过的工具——而走到那一步的过程，在我看来和结果同样重要。',
+  bioEn: "I've always been drawn to where intelligent systems meet real learning. What pulls me in isn't the models themselves but the people on the other end of them — the learner trying to understand something, the teacher deciding whether to trust the tool in front of their class. So I spend my time on the hard part: getting a system to know when it's wrong, to adapt to how someone actually reasons, and to explain itself in a way a person can act on. I like turning problems like these into tools people can genuinely trust — and I care about the process of getting there as much as the result.",
+};
+
+const socialLinks: SocialLink[] = [
+  { platform: 'Google Scholar', url: SITE.scholarUrl, icon: 'scholar' },
+  { platform: 'Email', url: `mailto:${SITE.email}`, icon: 'email' },
+];
+
+const aboutSocialLinks: SocialLink[] = socialLinks.map((link) =>
+  link.icon === 'email' ? { ...link, url: '#contact' } : link
+);
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={`${SITE.name} — ${SITE.titleEn}`} />
+    <title>Zhangze Chen — Homepage</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <LanguageToggle client:load />
+    <main>
+      <!-- 1. Hero -->
+      <section id="hero">
+        <Hero
+          name={SITE.name}
+          title={SITE.titleEn}
+          institution={SITE.institution}
+          institutionZh={SITE.institutionZh}
+          avatarSrc="/扣背景的图.png"
+          avatarAlt={`${SITE.name} avatar`}
+        />
+      </section>
+
+      <!-- 2. About -->
+      <section id="about">
+        <About
+          headlineZh={SITE.headlineZh}
+          headlineEn={SITE.headlineEn}
+          bioZh={SITE.bioZh}
+          bioEn={SITE.bioEn}
+          socialLinks={aboutSocialLinks}
+          badgeName={SITE.nameZh}
+          badgeNameEn={SITE.name}
+          badgeRoleZh={SITE.titleZh}
+          badgeRoleEn={SITE.titleEn}
+          badgeInstitutionZh={SITE.institutionZh}
+          badgeInstitutionEn={SITE.institution}
+          badgeAvatarSrc="/照片.png"
+          nameHighlight={SITE.nameZh}
+        />
+      </section>
+
+      <!-- 3. Experience -->
+      <section id="experience">
+        <Experience entries={experience} />
+      </section>
+
+      <!-- 4. Publications -->
+      <section id="publications">
+        <Publications entries={publications} />
+      </section>
+
+      <!-- 5. PRISM -->
+      <section id="prism">
+        <Prism />
+      </section>
+
+      <!-- 6. Academic Activities -->
+      <ActivityGallery />
+
+      <!-- 7. Honors & Awards -->
+      <section id="honors">
+        <Honors entries={honors} />
+      </section>
+
+      <!-- 8. Contact -->
+      <section id="contact">
+        <Contact
+          email={SITE.email}
+          socialLinks={socialLinks}
+          copyrightName={SITE.name}
+        />
+      </section>
+    </main>
+
+    <!-- Bottom dock-panel nav -->
+    <CapsuleNav items={NAV_ITEMS} client:load />
+  </body>
+</html>
+
+<!-- Inline scroll-reveal script -->
+<script>
+  const observer = new IntersectionObserver(
+    (entries) => {
+      for (const entry of entries) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          observer.unobserve(entry.target);
+        }
+      }
+    },
+    { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+  );
+
+  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+</script>

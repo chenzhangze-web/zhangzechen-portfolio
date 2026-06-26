@@ -1,0 +1,43 @@
+---
+import type { SocialLink } from '@/types';
+import SocialIcons from '../ui/SocialIcons.astro';
+
+interface Props {
+  email: string;
+  socialLinks: SocialLink[];
+  copyrightName: string;
+}
+
+const { email, socialLinks, copyrightName } = Astro.props;
+---
+
+<section class="py-24 md:py-32 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <!-- Section heading -->
+    <div class="reveal mb-12">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading tracking-tight font-display">
+        <span class="lang-zh">联系我</span>
+        <span class="lang-en">Let's Talk</span>
+      </h2>
+    </div>
+
+    <!-- Large email display -->
+    <p class="reveal text-2xl md:text-3xl font-bold text-heading/80 mb-8 font-display" style="transition-delay: 100ms">
+      <a href={`mailto:${email}`} class="hover:text-accent transition-colors">
+        {email}
+      </a>
+    </p>
+
+    <!-- Social icons -->
+    <div class="reveal flex justify-center mb-12" style="transition-delay: 200ms">
+      <SocialIcons links={socialLinks} size="lg" />
+    </div>
+
+    <!-- Footer -->
+    <footer class="reveal mt-16 pt-8 border-t border-border/50" style="transition-delay: 300ms">
+      <p class="text-muted text-xs">
+        &copy; {new Date().getFullYear()} {copyrightName}. <span class="lang-zh">保留所有权利。</span><span class="lang-en">All rights reserved.</span>
+      </p>
+    </footer>
+  </div>
+</section>

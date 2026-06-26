@@ -1,0 +1,37 @@
+---
+import type { CertEntry } from '@/types';
+import CertCard from '../ui/CertCard.astro';
+
+interface Props {
+  entries: CertEntry[];
+}
+
+const { entries } = Astro.props;
+---
+
+<section class="py-24 md:py-32 px-6">
+  <div class="max-w-3xl mx-auto">
+    <!-- Section heading -->
+    <div class="reveal text-center mb-16">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading tracking-tight">Certifications</h2>
+      <div class="w-16 h-1 bg-accent/40 rounded-full mt-4 mx-auto"></div>
+    </div>
+
+    <div class="flex flex-col gap-4">
+      {entries.map((entry) => (
+        <CertCard
+          title={entry.title}
+          issuer={entry.issuer}
+          issueDate={entry.issueDate}
+          expiryDate={entry.expiryDate}
+          badgeUrl={entry.badgeUrl}
+          verifyUrl={entry.verifyUrl}
+        />
+      ))}
+    </div>
+
+    {entries.length === 0 && (
+      <p class="reveal text-muted text-center text-sm">No certifications listed yet.</p>
+    )}
+  </div>
+</section>

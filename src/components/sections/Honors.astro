@@ -1,0 +1,121 @@
+---
+import type { HonorEntry } from '@/types';
+
+interface Props {
+  entries: HonorEntry[];
+}
+
+const { entries } = Astro.props;
+const awards = entries.filter((e) => e.category !== 'patent');
+const patents = entries.filter((e) => e.category === 'patent');
+
+const categoryLabel: Record<string, { zh: string; en: string }> = {
+  competition: { zh: '竞赛', en: 'Competition' },
+  scholarship: { zh: '奖学金', en: 'Scholarship' },
+  service: { zh: '荣誉', en: 'Service' },
+  patent: { zh: '专利', en: 'Patent' },
+};
+---
+
+<section class="py-24 md:py-32 px-6">
+  <div class="max-w-3xl mx-auto">
+    <!-- Heading -->
+    <div class="reveal text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-extrabold text-heading tracking-tight font-display">
+        <span class="lang-zh">荣誉与奖项</span>
+        <span class="lang-en">Honors &amp; Awards</span>
+      </h2>
+    </div>
+
+    {entries.length > 0 ? (
+      <div>
+        <!-- Awards list -->
+        <div class="space-y-0">
+          {awards.map((entry) => (
+            <div class="reveal flex items-start gap-4 py-3 px-4 border-b border-border/40 last:border-b-0">
+                  <span class="text-xs text-muted/60 shrink-0 w-16 pt-0.5 font-medium">{entry.year}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline gap-2 flex-wrap">
+                  <span class="text-sm font-display font-[700] text-heading">
+                    <span class="lang-zh">{entry.awardZh}</span>
+                    <span class="lang-en">{entry.awardEn}</span>
+                  </span>
+                  <span class="text-[10px] text-muted/50">
+                    <span class="lang-zh">{categoryLabel[entry.category]?.zh ?? '竞赛'}</span>
+                    <span class="lang-en">{categoryLabel[entry.category]?.en ?? 'Competition'}</span>
+                  </span>
+                </div>
+                {(entry.titleZh || entry.titleEn) && (
+                  <p class="text-xs text-muted mt-0.5">
+                    <span class="lang-zh">{entry.titleZh}</span>
+                    <span class="lang-en">{entry.titleEn}</span>
+                  </p>
+                )}
+                {(entry.projectZh || entry.projectEn) && (
+                  <p class="text-xs text-muted/70 mt-0.5">
+                    <span class="lang-zh">项目：{entry.projectZh}</span>
+                    <span class="lang-en">Project: {entry.projectEn}</span>
+                  </p>
+                )}
+                {entry.ranking && (
+                  <span class="text-[10px] text-heading/40 mt-0.5 inline-block">
+                    <span class="lang-zh">排名 {entry.ranking}</span>
+                    <span class="lang-en">Rank {entry.ranking}</span>
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <!-- Patents -->
+        {patents.length > 0 && (
+          <div class="mt-12">
+            <div class="reveal text-center mb-6">
+              <h3 class="text-2xl font-display font-[700] text-heading">
+                <span class="lang-zh">专利</span>
+                <span class="lang-en">Patents</span>
+              </h3>
+            </div>
+            <div class="space-y-0">
+              {patents.map((entry) => (
+                <div class="reveal flex items-start gap-4 py-3 px-4 border-b border-border/40 last:border-b-0">
+                  <span class="text-xs text-muted/60 shrink-0 w-16 pt-0.5 font-medium">{entry.year}</span>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-baseline gap-2 flex-wrap">
+                      <span class="text-sm font-display font-[700] text-heading">
+                        <span class="lang-zh">{entry.titleZh}</span>
+                        <span class="lang-en">{entry.titleEn}</span>
+                      </span>
+                      <span class="text-[10px] text-purple-600/70">
+                        <span class="lang-zh">{entry.awardZh}</span>
+                        <span class="lang-en">{entry.awardEn}</span>
+                      </span>
+                    </div>
+                    {(entry.projectZh || entry.projectEn) && (
+                      <p class="text-xs text-muted mt-0.5 font-mono text-[11px]">
+                        <span class="lang-zh">{entry.projectZh}</span>
+                        <span class="lang-en">{entry.projectEn}</span>
+                      </p>
+                    )}
+                    {(entry.descriptionZh || entry.descriptionEn) && (
+                      <p class="text-xs text-muted/70 mt-0.5">
+                        <span class="lang-zh">{entry.descriptionZh}</span>
+                        <span class="lang-en">{entry.descriptionEn}</span>
+                      </p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    ) : (
+      <p class="reveal text-muted text-center text-sm">
+        <span class="lang-zh">暂无荣誉记录。</span>
+        <span class="lang-en">No honors listed yet.</span>
+      </p>
+    )}
+  </div>
+</section>
